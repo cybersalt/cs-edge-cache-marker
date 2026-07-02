@@ -1,0 +1,25 @@
+<h2>Changelog</h2>
+
+<h3>v1.0.0 &mdash; 2026-07-02</h3>
+
+<h4>&#128640; Initial release</h4>
+
+<ul>
+    <li><strong>Marker cookie on <code>onUserAfterLogin</code></strong> &mdash; sets a configurable cookie (default <code>cs_edit_session=1</code>) when a user in one of the configured editor groups logs in.</li>
+    <li><strong>Cookie cleared on <code>onUserAfterLogout</code></strong> &mdash; sends an expired cookie so the browser clears the marker.</li>
+    <li><strong>Group-scoped</strong> &mdash; only fires for users whose group memberships include one of the configured groups (default: Author, Editor, Publisher, Manager, Administrator, Super Users).</li>
+    <li><strong>Configurable</strong> cookie name, value, lifetime, SameSite, HttpOnly.</li>
+    <li><strong>Auto-Secure detection</strong> &mdash; respects <code>X-Forwarded-Proto: https</code> so the Secure flag is set correctly behind Cloudflare / reverse proxies.</li>
+    <li><strong>Session-cookie default</strong> &mdash; cleared when the browser closes; matches Joomla session lifecycle.</li>
+    <li><strong>Post-install card</strong> with copy-paste Cloudflare rule expression + link to plugin settings.</li>
+    <li><strong>Auto-enable on install</strong> &mdash; no manual admin trip needed.</li>
+    <li><strong>Debug logging (optional)</strong> &mdash; INFO-level entries to <code>plg_system_csedgecachemarker</code> log category.</li>
+</ul>
+
+<h4>&#128230; Context</h4>
+
+<p>Built the afternoon of 2026-07-02 in response to Derrick Cook reporting SP Page Builder front-end editing wasn't working on <a href="https://wyliberty.org">wyliberty.org</a> after a Cloudflare Cache Rule was added on 2026-06-29 to serve HTML from CF edge (a 5&times; TTFB win). The rule cached anonymous HTML and served it to logged-in editors too, hiding the SPPB Edit-pencil overlays. This plugin is the correct fix: a marker cookie lets the CF rule bypass cache specifically for editor sessions while keeping the anonymous-visitor cache-hit win.</p>
+
+<p>Companion Cloudflare rule expression addition:</p>
+
+<pre><code>and not (http.cookie contains "cs_edit_session=1")</code></pre>
