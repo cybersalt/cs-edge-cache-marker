@@ -1,5 +1,20 @@
 <h2>Changelog</h2>
 
+<h3>v1.0.1 &mdash; 2026-07-02</h3>
+
+<h4>&#128027; Fixes</h4>
+
+<ul>
+    <li><strong>Manifest <code>&lt;description&gt;</code> now references a key that actually exists in <code>.sys.ini</code></strong> &mdash; the previous <code>PLG_SYSTEM_CSEDGECACHEMARKER_DESCRIPTION</code> key only lived in <code>.ini</code>, which Joomla doesn't auto-load on the Extension Manager listing. The listing was showing the raw constant name. Manifest now references <code>PLG_SYSTEM_CSEDGECACHEMARKER_XML_DESCRIPTION</code>; the .sys.ini's copy is expanded to the full sentence.</li>
+    <li><strong><code>&lt;targetplatform&gt;</code> regex added</strong> &mdash; <code>5\.[0-9]+|6\.[0-9]+</code> (was previously missing from <code>csedgecachemarker.xml</code> entirely; <code>updates.xml</code> had bare <code>5</code> which excluded J6). Joomla 6 sites can now accept the auto-update.</li>
+</ul>
+
+<h4>&#128295; Chore</h4>
+
+<ul>
+    <li>Added Joomla Brain submodule at <code>.joomla-brain/</code>.</li>
+</ul>
+
 <h3>v1.0.0 &mdash; 2026-07-02</h3>
 
 <h4>&#128640; Initial release</h4>

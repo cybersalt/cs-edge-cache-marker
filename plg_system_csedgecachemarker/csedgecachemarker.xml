@@ -7,9 +7,11 @@
     <license>GNU General Public License version 2 or later</license>
     <authorEmail>support@cybersalt.com</authorEmail>
     <authorUrl>https://cybersalt.com</authorUrl>
-    <version>1.0.0</version>
-    <description>PLG_SYSTEM_CSEDGECACHEMARKER_DESCRIPTION</description>
+    <version>1.0.1</version>
+    <description>PLG_SYSTEM_CSEDGECACHEMARKER_XML_DESCRIPTION</description>
     <namespace path="src">Cybersalt\Plugin\System\CsEdgeCacheMarker</namespace>
+
+    <targetplatform name="joomla" version="5\.[0-9]+|6\.[0-9]+"/>
 
     <files>
         <folder plugin="csedgecachemarker">services</folder>

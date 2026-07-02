@@ -36,8 +36,8 @@ Zero degradation to public-facing speed. Full editor UX preserved. That's the po
 
 ## Requirements
 
-- Joomla 5.0+ (uses namespaced service provider + subscriber pattern; not compatible with legacy plugin loader)
-- PHP 8.0+ (uses arrow functions + option-array `setcookie()`)
+- Joomla 5.x or 6.x (uses namespaced service provider + subscriber pattern; not compatible with legacy plugin loader)
+- PHP 8.1+ (Joomla 5 floor; uses arrow functions + option-array `setcookie()`)
 
 ## Installation
 
