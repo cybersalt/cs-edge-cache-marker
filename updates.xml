@@ -12,7 +12,7 @@
         <downloads>
             <downloadurl type="full" format="zip">https://github.com/cybersalt/cs-edge-cache-marker/releases/download/v1.0.1/plg_system_csedgecachemarker_v1.0.1.zip</downloadurl>
         </downloads>
-        <sha256>26048f99d4b4ff5285c02f6f23332c511424f09b92966e75cb405c223d9338ca</sha256>
+        <sha256>22e159e90ff2954f14e3a3b4c51eaab7f340bf4c9d99b54e476447cda9837a4d</sha256>
         <changelogurl>https://raw.githubusercontent.com/cybersalt/cs-edge-cache-marker/master/CHANGELOG.html</changelogurl>
         <tags>
             <tag>stable</tag>

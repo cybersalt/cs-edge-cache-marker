@@ -18,6 +18,12 @@
         <folder>src</folder>
     </files>
 
+    <media folder="media" destination="plg_system_csedgecachemarker">
+        <filename>logo.svg</filename>
+        <filename>logo-mono.svg</filename>
+        <filename>logo.png</filename>
+    </media>
+
     <languages folder="language">
         <language tag="en-GB">en-GB/plg_system_csedgecachemarker.ini</language>
         <language tag="en-GB">en-GB/plg_system_csedgecachemarker.sys.ini</language>

@@ -1,0 +1,29 @@
+<!--
+  cs-edge-cache-marker — mono-cobalt fallback
+  Single-ink cobalt #0102E1 variant of the canonical duotone logo.
+  Same cookie + editor-person corner-badge composition, but all cobalt
+  for single-colour contexts (favicon monochrome, print-1-colour, dark-mode invert).
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200"
+     viewBox="0 0 1200 1200" fill="none"
+     stroke-linecap="round" stroke-linejoin="round">
+  <g transform="scale(50)">
+    <!-- Cobalt cookie base -->
+    <g stroke="#0102E1" stroke-width="2">
+      <path d="M8 3.394v0a1 1 0 0 0 -.436 .076a9 9 0 1 0 12 12a1 1 0 0 0 1 -1v0a4 4 0 0 0 -4 -4a2 2 0 0 1 -2 -2a4 4 0 0 0 -4 -4a1 1 0 0 1 -1 -1" />
+      <path d="M8 13v.01" />
+      <path d="M8 17v.01" />
+      <path d="M12 16v.01" />
+      <path d="M11 13v.01" />
+      <path d="M15 16v.01" />
+      <path d="M10 10v.01" />
+    </g>
+    <!-- White knockout circle behind badge -->
+    <circle cx="18" cy="5.5" r="3.5" fill="#ffffff" stroke="#ffffff" stroke-width="1" />
+    <!-- Cobalt editor-person silhouette (mono variant) -->
+    <g stroke="#0102E1" stroke-width="0.9" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="18" cy="4.4" r="0.95" fill="#0102E1" fill-opacity="0.18" />
+      <path d="M15.9 7.5a2.1 2.1 0 0 1 4.2 0" fill="#0102E1" fill-opacity="0.18" />
+    </g>
+  </g>
+</svg>

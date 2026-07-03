@@ -101,7 +101,8 @@ return new class () implements InstallerScriptInterface {
 
         echo <<<HTML
 <div class="card border-success mt-3">
-    <div class="card-header bg-success text-white">
+    <div class="card-header bg-success text-white d-flex align-items-center">
+        <img src="/media/plg_system_csedgecachemarker/logo.svg" alt="" width="40" height="40" class="me-2" style="background:#fff; border-radius:50%; padding:4px;" />
         <h3 class="card-title mb-0">✅ {$title}</h3>
     </div>
     <div class="card-body">

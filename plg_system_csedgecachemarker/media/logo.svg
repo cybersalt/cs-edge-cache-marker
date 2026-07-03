@@ -1,0 +1,32 @@
+<!--
+  cs-edge-cache-marker — canonical duotone logo
+  Source: Tabler Icons "cookie" + custom person-silhouette corner badge (MIT licensed base)
+  Cybersalt duotone: cobalt #0102E1 cookie, orange #FE9904 editor badge.
+  Reads as: "a marker cookie for editors."
+  Same corner-badge family-language pattern as cs-articles-module-maxxed,
+  cs-template-integrity, cs-mcp-for-j, and cs-siteground-cache.
+  Badge positioned at cx=18, cy=5.5, r=3.5 — full circle inside viewBox at every render size.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200"
+     viewBox="0 0 1200 1200" fill="none"
+     stroke-linecap="round" stroke-linejoin="round">
+  <g transform="scale(50)">
+    <!-- Cobalt cookie base (Tabler cookie) -->
+    <g stroke="#0102E1" stroke-width="2">
+      <path d="M8 3.394v0a1 1 0 0 0 -.436 .076a9 9 0 1 0 12 12a1 1 0 0 0 1 -1v0a4 4 0 0 0 -4 -4a2 2 0 0 1 -2 -2a4 4 0 0 0 -4 -4a1 1 0 0 1 -1 -1" />
+      <path d="M8 13v.01" />
+      <path d="M8 17v.01" />
+      <path d="M12 16v.01" />
+      <path d="M11 13v.01" />
+      <path d="M15 16v.01" />
+      <path d="M10 10v.01" />
+    </g>
+    <!-- White knockout circle behind badge -->
+    <circle cx="18" cy="5.5" r="3.5" fill="#ffffff" stroke="#ffffff" stroke-width="1" />
+    <!-- Orange editor-person silhouette inside the badge -->
+    <g stroke="#FE9904" stroke-width="0.9" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="18" cy="4.4" r="0.95" fill="#FE9904" fill-opacity="0.18" />
+      <path d="M15.9 7.5a2.1 2.1 0 0 1 4.2 0" fill="#FE9904" fill-opacity="0.18" />
+    </g>
+  </g>
+</svg>
