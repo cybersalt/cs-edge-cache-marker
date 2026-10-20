@@ -19,7 +19,7 @@ use Joomla\CMS\User\UserFactoryInterface;
 use Joomla\Event\SubscriberInterface;
 
 /**
- * CS Edge Cache Marker
+ * Cybersalt Edge Cache Marker
  *
  * Sets a marker cookie on user login so upstream edge caches (Cloudflare,
  * SiteGround NGINX cache, Fastly, Bunny, Varnish, any CDN with a Cache Rule
@@ -29,11 +29,11 @@ use Joomla\Event\SubscriberInterface;
  * front-end edit overlays, Joomla core inline edit pencils, module edit
  * icons, template edit icons, etc.).
  *
- * The cookie is set only for users whose primary or secondary groups match
- * the configured group list (default: Author, Editor, Publisher, Manager,
- * Administrator, Super Users). Site-visitor / registered-user-only accounts
- * do NOT trigger the marker — preserving cache for member-only content
- * scenarios.
+ * The cookie is set only for users whose authorised groups (their own
+ * groups plus every parent group) include one of the configured groups
+ * (default: Author, Editor, Publisher, Manager, Administrator, Super Users).
+ * Site-visitor / registered-user-only accounts do NOT trigger the marker,
+ * preserving cache for member-only content scenarios.
  *
  * Companion edge-cache rule expression (Cloudflare example):
  *   ... and not (http.cookie contains "cs_edit_session=1")
@@ -42,6 +42,18 @@ class CsEdgeCacheMarker extends CMSPlugin implements SubscriberInterface
 {
     /** Auto-load language files */
     protected $autoloadLanguage = true;
+
+    /**
+     * Author, Editor, Publisher, Manager, Administrator, Super Users
+     * (Joomla's standard group IDs). Used when no groups are configured.
+     */
+    private const DEFAULT_GROUPS = [3, 4, 5, 6, 7, 8];
+
+    /** Log category, also used as the debug log file name. */
+    private const LOG_CATEGORY = 'plg_system_csedgecachemarker';
+
+    /** Whether the debug file logger has been registered in this request. */
+    private static bool $loggerAdded = false;
 
     public static function getSubscribedEvents(): array
     {
@@ -192,11 +204,6 @@ class CsEdgeCacheMarker extends CMSPlugin implements SubscriberInterface
     {
         $configured = $this->getConfiguredGroupIds();
 
-        if ($configured === []) {
-            // No groups configured — cookie is set for every login.
-            return true;
-        }
-
         try {
             $user = Factory::getContainer()
                 ->get(UserFactoryInterface::class)
@@ -216,7 +223,13 @@ class CsEdgeCacheMarker extends CMSPlugin implements SubscriberInterface
      */
     private function getConfiguredGroupIds(): array
     {
-        $raw = $this->params->get('groups', []);
+        $raw = $this->params->get('groups', null);
+
+        // Nothing stored (never saved, or the list was cleared): fall back to
+        // the manifest default, the six standard editing groups.
+        if ($raw === null || $raw === '' || $raw === []) {
+            return self::DEFAULT_GROUPS;
+        }
 
         if (\is_string($raw)) {
             // Comma-separated string fallback.
@@ -229,7 +242,7 @@ class CsEdgeCacheMarker extends CMSPlugin implements SubscriberInterface
 
         $ids = array_filter(array_map('intval', $raw), static fn(int $id): bool => $id > 0);
 
-        return array_values(array_unique($ids));
+        return $ids === [] ? self::DEFAULT_GROUPS : array_values(array_unique($ids));
     }
 
     // -----------------------------------------------------------------
@@ -275,7 +288,18 @@ class CsEdgeCacheMarker extends CMSPlugin implements SubscriberInterface
         }
 
         try {
-            Log::add($message, Log::INFO, 'plg_system_csedgecachemarker');
+            // Joomla only writes log entries for categories that have a logger,
+            // so register a text-file logger for ours the first time it's needed.
+            if (!self::$loggerAdded) {
+                Log::addLogger(
+                    ['text_file' => self::LOG_CATEGORY . '.php'],
+                    Log::ALL,
+                    [self::LOG_CATEGORY]
+                );
+                self::$loggerAdded = true;
+            }
+
+            Log::add($message, Log::INFO, self::LOG_CATEGORY);
         } catch (\Throwable $e) {
             // Silent — never let a logging failure break login.
         }

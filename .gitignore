@@ -17,3 +17,8 @@ desktop.ini
 # Environment
 .env
 .env.local
+
+# Local-only working files (never commit: may hold site credentials)
+.local/
+.playwright-mcp/
+page-after-upload-click.md

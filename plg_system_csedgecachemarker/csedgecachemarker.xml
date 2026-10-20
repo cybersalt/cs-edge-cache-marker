@@ -2,16 +2,14 @@
 <extension type="plugin" group="system" method="upgrade">
     <name>plg_system_csedgecachemarker</name>
     <author>Cybersalt</author>
-    <creationDate>2026-07-02</creationDate>
+    <creationDate>2026-10-20</creationDate>
     <copyright>Copyright (C) 2026 Cybersalt. All rights reserved.</copyright>
     <license>GNU General Public License version 2 or later</license>
     <authorEmail>support@cybersalt.com</authorEmail>
-    <authorUrl>https://cybersalt.com</authorUrl>
-    <version>1.0.1</version>
+    <authorUrl>https://www.cybersalt.com</authorUrl>
+    <version>1.0.2</version>
     <description>PLG_SYSTEM_CSEDGECACHEMARKER_XML_DESCRIPTION</description>
     <namespace path="src">Cybersalt\Plugin\System\CsEdgeCacheMarker</namespace>
-
-    <targetplatform name="joomla" version="5\.[0-9]+|6\.[0-9]+"/>
 
     <files>
         <folder plugin="csedgecachemarker">services</folder>
@@ -52,12 +50,12 @@
                 />
                 <field
                     name="groups"
-                    type="usergroup"
+                    type="usergrouplist"
                     label="PLG_SYSTEM_CSEDGECACHEMARKER_GROUPS_LABEL"
                     description="PLG_SYSTEM_CSEDGECACHEMARKER_GROUPS_DESC"
                     multiple="true"
                     layout="joomla.form.field.list-fancy-select"
-                    default="4,5,6,7,8"
+                    default="3,4,5,6,7,8"
                 />
                 <field
                     name="cookie_lifetime"
@@ -108,6 +106,6 @@
     <scriptfile>script.php</scriptfile>
 
     <updateservers>
-        <server type="extension" priority="1" name="CS Edge Cache Marker Updates">https://raw.githubusercontent.com/cybersalt/cs-edge-cache-marker/main/updates.xml</server>
+        <server type="extension" priority="1" name="Cybersalt Edge Cache Marker">https://www.cybersalt.com/index.php?option=com_csreleasemanager&amp;task=api.updatexml&amp;format=raw&amp;element=csedgecachemarker</server>
     </updateservers>
 </extension>

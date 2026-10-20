@@ -1,92 +1,61 @@
-# CS Edge Cache Marker
+# Cybersalt Edge Cache Marker
 
-**Have your Joomla site fast for the public AND editable from the front-end at the same time.**
+**Keep a Joomla site fast for the public and editable from the front end at the same time.**
 
-A tiny Joomla 5/6 system plugin that sets a marker cookie on editor login so upstream edge caches — **Cloudflare Cache Rules**, **SiteGround Dynamic Cache**, **Fastly**, **Bunny**, **Varnish**, **NGINX proxy_cache**, or any CDN with cookie-inspection support — can **bypass cached HTML for authenticated editor sessions while still serving cached HTML at edge speed to everyone else**.
+A small Joomla 5/6 system plugin that sets a marker cookie when an editor logs in, so an edge cache in front of the site (a **Cloudflare** Cache Rule, **Varnish**, **NGINX** `proxy_cache`, **Fastly**, **Bunny** or any CDN that can match on a cookie) can skip its cached HTML for editors while still serving cached pages to everyone else.
 
-## The problem this solves
+- **Documentation:** https://docs.cybersalt.com/extensions/edge-cache-marker
+- **Download and product page:** https://www.cybersalt.com/extensions/edge-cache-marker
+- **Support:** https://www.cybersalt.com/services/support-request-form or [GitHub issues](https://github.com/cybersalt/cs-edge-cache-marker/issues)
 
-You put a Joomla site behind a full-HTML edge cache and TTFB drops from ~200 ms to ~30 ms for anonymous visitors — a huge win. But the moment a logged-in editor visits a page they built with SP Page Builder, the Edit pencils have vanished. Joomla's core inline edit icons don't appear either. Module edit icons — gone. Template edit icons — gone.
+## The problem it solves
 
-Because the edge is caching the anonymous-user render of the page and serving that copy to *everyone*, including your logged-in editors. Their browser has a valid Joomla session, but they're looking at HTML that was rendered without one. All the editor overlays that Joomla only draws for authenticated users never make it through the cache.
+Put a full-HTML edge cache in front of a Joomla site and anonymous visitors get pages in a few tens of milliseconds. But the cache serves that same anonymous copy to logged-in editors too, so the front-end edit icons (Joomla's inline edit buttons, module edit icons, SP Page Builder's edit overlay) disappear: the editor is looking at HTML that was rendered for nobody in particular.
 
-The standard fix is to bypass edge cache when a distinguishing cookie is present. But if you naively bypass on "any Joomla session cookie," you also bypass for every anonymous visitor who submits a contact form or a newsletter signup — because Joomla starts a session for them too. That erodes cache-hit ratio for no benefit.
+The usual fix is to bypass the cache when a cookie is present. Bypassing on Joomla's session cookie doesn't work, because Joomla gives every visitor a session. Bypassing on Joomla's own `joomla_user_state` cookie bypasses for **every** logged-in user, including members who only read content.
 
-**This plugin is precise**: it fires the marker cookie **only** on `onUserAfterLogin` for users in a configured editor group list (default: Author / Editor / Publisher / Manager / Administrator / Super Users). Anonymous form submitters don't get the marker. Registered-only members (OSMembership subscribers reading paywalled articles, MembershipPro users, any member-content pattern) don't get the marker. Only real editors trigger bypass, so cache-hit ratio stays maximal.
+This plugin sets its marker **only** for users in the groups you choose (by default Author, Editor, Publisher, Manager, Administrator and Super Users), on both site and administrator logins, and clears it on logout. Your edge rule bypasses on that one cookie; everyone else, members included, keeps getting cached pages.
 
-## What "best of both worlds" looks like in practice
+## How it works
 
-- **Anonymous visitor lands on your homepage**: served from CF edge in ~35 ms. First hit through their POP is a MISS; from then on it's HIT for every visitor from that POP until the TTL rolls.
-- **Anonymous visitor submits a contact form**: Joomla starts a session; they get a Joomla session cookie in their browser. Doesn't matter — the plugin only sets `cs_edit_session=1` on `onUserAfterLogin`, not on session start. Their next page load is still a cache HIT.
-- **Anonymous visitor buys an OSMembership subscription and logs into a "customer" account** with no editing rights: not in the plugin's configured editor group list, so no `cs_edit_session=1` cookie. Cache stays fully HIT-capable for them.
-- **You log into `/administrator`** as a Super User: `onUserAfterLogin` fires, plugin sees you're in group 8 (Super Users), sets `cs_edit_session=1; Path=/`. From that moment, every request your browser makes to any page on the site carries the cookie. Cloudflare's Cache Rule sees the cookie and returns `Cf-Cache-Status: DYNAMIC` — the request goes straight through to Joomla, which renders the page fresh with all your editor overlays. SP Page Builder Edit pencil? Visible. Click it, edit the page, save. Log out → cookie clears → next visit as anonymous is back to cache HIT.
-
-Zero degradation to public-facing speed. Full editor UX preserved. That's the point.
-
-## Features
-
-- Fires on `onUserAfterLogin` — sets the marker cookie
-- Fires on `onUserAfterLogout` — clears the cookie
-- Group-scoped — only writes the cookie when the logging-in user is in one of the configured groups (default: Author, Editor, Publisher, Manager, Administrator, Super Users)
-- Configurable cookie name, value, lifetime, SameSite, HttpOnly
-- Session-cookie by default (clears when the browser closes)
-- Auto-Secure when the request is HTTPS (respects `X-Forwarded-Proto` for reverse-proxy / Cloudflare)
-- Debug logging (optional) to `plg_system_csedgecachemarker` category
-- Post-install card in the Joomla admin with copy-paste Cloudflare rule expression
+- `onUserAfterLogin`: if the user belongs to one of the configured groups (or to a group nested under one of them), the response sets `cs_edit_session=1; path=/; SameSite=Lax` (`Secure` on HTTPS, including behind a proxy that sends `X-Forwarded-Proto: https`).
+- `onUserAfterLogout`: the response expires the cookie.
+- Nothing else. The plugin doesn't change page output and doesn't talk to your CDN.
 
 ## Requirements
 
-- Joomla 5.x or 6.x (uses namespaced service provider + subscriber pattern; not compatible with legacy plugin loader)
-- PHP 8.1+ (Joomla 5 floor; uses arrow functions + option-array `setcookie()`)
+- Joomla 5.0 or newer (5.x and 6.x)
+- PHP 8.1 or newer
 
 ## Installation
 
-1. Download the latest `plg_system_csedgecachemarker_v*.zip` from the [releases page](https://github.com/cybersalt/cs-edge-cache-marker/releases) or [dist/ folder](./dist).
-2. Joomla admin → System → Install → Extensions → Upload Package File → drop the zip.
-3. The plugin auto-enables on install (no need to visit the Plugins page first).
+1. Download the zip from the [product page](https://www.cybersalt.com/extensions/edge-cache-marker) or the [GitHub releases](https://github.com/cybersalt/cs-edge-cache-marker/releases).
+2. Joomla admin → **System → Install → Extensions** → upload the zip.
+3. The plugin enables itself on install. Updates arrive through **System → Update → Extensions** from Cybersalt's update server.
 
 ## Configuration
 
-**System → Manage → Plugins → search "csedgecachemarker"**
+**System → Manage → Plugins → "Cybersalt Edge Cache Marker"**
 
-| Field | Default | Notes |
+| Setting | Default | What it does |
 |---|---|---|
-| Cookie name | `cs_edit_session` | Reference this exact string in your edge-cache bypass rule |
-| Cookie value | `1` | Change only if coordinating with a more complex rule |
-| Editor user groups | Author, Editor, Publisher, Manager, Administrator, Super Users | Multi-select. Groups NOT in this list won't trigger the marker |
-| Cookie lifetime (seconds) | `0` | `0` = session cookie. Positive value = persistent for N seconds |
-| SameSite | `Lax` | `None` requires Secure, auto-downgrades to `Lax` on HTTP |
-| HttpOnly | Off | Keep **off** unless you're sure no client JS needs to see the cookie |
-| Debug logging | Off | Optional trace to `logs/plg_system_csedgecachemarker.*.php` |
+| Cookie name | `cs_edit_session` | The name your edge rule looks for. Letters, digits, `_` and `-` only. |
+| Cookie value | `1` | The value your rule matches. |
+| Editor user groups | Author, Editor, Publisher, Manager, Administrator, Super Users | Users in these groups (or groups nested under them) get the cookie. Left empty, the defaults are used. |
+| Cookie lifetime (seconds) | `0` | `0` = session cookie, gone when the browser closes. A positive number keeps it for that many seconds. |
+| SameSite | `Lax` | `None` is downgraded to `Lax` on plain HTTP. |
+| HttpOnly | No | Hides the cookie from JavaScript. Your edge cache sees it either way. |
+| Debug logging | No | Writes to `plg_system_csedgecachemarker.php` in Joomla's log folder. |
 
-## Edge-cache rule expressions
+## Edge-cache rules
 
-### Cloudflare Cache Rule
-
-Append to your existing cache-eligibility expression:
+**Cloudflare Cache Rule** — add to the rule's expression:
 
 ```
 and not (http.cookie contains "cs_edit_session=1")
 ```
 
-Full example (cache HTML on `example.com` except admin/API/logged-in editors):
-
-```
-(http.host eq "example.com"
- and not starts_with(http.request.uri.path, "/administrator")
- and not starts_with(http.request.uri.path, "/api")
- and not (http.cookie contains "cs_edit_session=1"))
-```
-
-### SiteGround Dynamic Cache
-
-Uses cookie exclusion via `.htaccess`:
-
-```apache
-SetEnvIf Cookie "cs_edit_session=1" no-cache=1
-```
-
-### Varnish (VCL)
+**Varnish (VCL):**
 
 ```vcl
 sub vcl_recv {
@@ -96,20 +65,19 @@ sub vcl_recv {
 }
 ```
 
-### NGINX proxy_cache
+**NGINX `proxy_cache`:**
 
 ```nginx
 map $http_cookie $skip_cache {
     default 0;
     "~*cs_edit_session=1" 1;
 }
-
-# In your location block:
+# in the location block:
 proxy_cache_bypass $skip_cache;
 proxy_no_cache $skip_cache;
 ```
 
-### Fastly
+**Fastly (VCL, in `vcl_recv`):**
 
 ```vcl
 if (req.http.Cookie ~ "cs_edit_session=1") {
@@ -117,25 +85,27 @@ if (req.http.Cookie ~ "cs_edit_session=1") {
 }
 ```
 
-## Compatibility notes
+More detail, including how to check it's working and what to purge after enabling it, is in the [documentation](https://docs.cybersalt.com/extensions/edge-cache-marker).
 
-- **Cookie name sanitization**: The cookie name is sanitized to `[A-Za-z0-9_-]` at emit time. If your rule references a name with other characters, adjust the config and match.
-- **SameSite=None auto-downgrade**: If you configure `SameSite=None` but the request is HTTP (not HTTPS), the plugin downgrades to `Lax` to avoid the browser silently rejecting a `None`-without-Secure cookie.
-- **Reverse proxies**: The plugin respects `X-Forwarded-Proto: https` for detecting HTTPS behind a proxy. If your proxy uses a different header, extend `requestIsSecure()`.
+## Things to know
+
+- The cookie is a hint, not a credential. Anyone can send it; all it does is skip the cache for their own requests. It grants no access.
+- Logging out of either the site or the administrator clears the cookie.
+- If a Joomla session expires without a logout, the cookie stays until the browser closes (with the default lifetime). That only means uncached pages for that browser.
+- Existing sites updating from 1.0.0/1.0.1 keep their saved group list, which doesn't include Author. Add it in the plugin if your authors edit on the front end.
 
 ## Build from source
 
 ```bash
-cd plg_system_csedgecachemarker
-7z a -tzip ../dist/plg_system_csedgecachemarker_v$(grep -m1 '<version>' csedgecachemarker.xml | sed 's/.*<version>\(.*\)<\/version>.*/\1/')_$(date +%Y%m%d_%H%M).zip *
+python dist/build.py
 ```
 
-The Joomla Brain checklist requires 7-Zip, not PowerShell's `Compress-Archive` (which can produce zips Joomla's installer rejects).
+Builds `plg_system_csedgecachemarker_v<version>.zip` in the repo root (forward-slash zip entries, `CHANGELOG.md` and `CHANGELOG.html` included). The script refuses to build if either changelog is missing or the manifest version doesn't match.
 
 ## License
 
-GNU General Public License version 2 or later. See [LICENSE](./LICENSE).
+GNU General Public License version 2 or later. See [LICENSE](./LICENSE). The logo's cookie shape is based on the MIT-licensed Tabler Icons "cookie" icon.
 
 ## Author
 
-Cybersalt · https://cybersalt.com · support@cybersalt.com
+[Cybersalt Consulting Ltd.](https://www.cybersalt.com) · support@cybersalt.com
