@@ -26,6 +26,6 @@
         </tags>
         <maintainer>Cybersalt</maintainer>
         <maintainerurl>https://www.cybersalt.com</maintainerurl>
-        <targetplatform name="joomla" version="(5|6).[0-9]+"/>
+        <targetplatform name="joomla" version="(5|6)\.[0-9]+"/>
     </update>
 </updates>
