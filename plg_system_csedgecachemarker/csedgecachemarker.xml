@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="system" method="upgrade">
+    <name>plg_system_csedgecachemarker</name>
+    <author>Cybersalt</author>
+    <creationDate>2026-10-20</creationDate>
+    <copyright>Copyright (C) 2026 Cybersalt. All rights reserved.</copyright>
+    <license>GNU General Public License version 2 or later</license>
+    <authorEmail>support@cybersalt.com</authorEmail>
+    <authorUrl>https://www.cybersalt.com</authorUrl>
+    <version>1.0.2</version>
+    <description>PLG_SYSTEM_CSEDGECACHEMARKER_XML_DESCRIPTION</description>
+    <namespace path="src">Cybersalt\Plugin\System\CsEdgeCacheMarker</namespace>
+
+    <files>
+        <folder plugin="csedgecachemarker">services</folder>
+        <folder>src</folder>
+    </files>
+
+    <media folder="media" destination="plg_system_csedgecachemarker">
+        <filename>logo.svg</filename>
+        <filename>logo-mono.svg</filename>
+        <filename>logo.png</filename>
+    </media>
+
+    <languages folder="language">
+        <language tag="en-GB">en-GB/plg_system_csedgecachemarker.ini</language>
+        <language tag="en-GB">en-GB/plg_system_csedgecachemarker.sys.ini</language>
+    </languages>
+
+    <config>
+        <fields name="params">
+            <fieldset name="basic">
+                <field
+                    name="cookie_name"
+                    type="text"
+                    label="PLG_SYSTEM_CSEDGECACHEMARKER_COOKIE_NAME_LABEL"
+                    description="PLG_SYSTEM_CSEDGECACHEMARKER_COOKIE_NAME_DESC"
+                    default="cs_edit_session"
+                    filter="cmd"
+                    size="40"
+                />
+                <field
+                    name="cookie_value"
+                    type="text"
+                    label="PLG_SYSTEM_CSEDGECACHEMARKER_COOKIE_VALUE_LABEL"
+                    description="PLG_SYSTEM_CSEDGECACHEMARKER_COOKIE_VALUE_DESC"
+                    default="1"
+                    filter="string"
+                    size="20"
+                />
+                <field
+                    name="groups"
+                    type="usergrouplist"
+                    label="PLG_SYSTEM_CSEDGECACHEMARKER_GROUPS_LABEL"
+                    description="PLG_SYSTEM_CSEDGECACHEMARKER_GROUPS_DESC"
+                    multiple="true"
+                    layout="joomla.form.field.list-fancy-select"
+                    default="3,4,5,6,7,8"
+                />
+                <field
+                    name="cookie_lifetime"
+                    type="number"
+                    label="PLG_SYSTEM_CSEDGECACHEMARKER_COOKIE_LIFETIME_LABEL"
+                    description="PLG_SYSTEM_CSEDGECACHEMARKER_COOKIE_LIFETIME_DESC"
+                    default="0"
+                    min="0"
+                    max="2592000"
+                />
+                <field
+                    name="cookie_samesite"
+                    type="list"
+                    label="PLG_SYSTEM_CSEDGECACHEMARKER_COOKIE_SAMESITE_LABEL"
+                    description="PLG_SYSTEM_CSEDGECACHEMARKER_COOKIE_SAMESITE_DESC"
+                    default="Lax"
+                >
+                    <option value="Lax">Lax</option>
+                    <option value="Strict">Strict</option>
+                    <option value="None">None</option>
+                </field>
+                <field
+                    name="cookie_httponly"
+                    type="radio"
+                    label="PLG_SYSTEM_CSEDGECACHEMARKER_COOKIE_HTTPONLY_LABEL"
+                    description="PLG_SYSTEM_CSEDGECACHEMARKER_COOKIE_HTTPONLY_DESC"
+                    default="0"
+                    class="btn-group btn-group-yesno"
+                >
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+                <field
+                    name="debug_mode"
+                    type="radio"
+                    label="PLG_SYSTEM_CSEDGECACHEMARKER_DEBUG_MODE_LABEL"
+                    description="PLG_SYSTEM_CSEDGECACHEMARKER_DEBUG_MODE_DESC"
+                    default="0"
+                    class="btn-group btn-group-yesno"
+                >
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+            </fieldset>
+        </fields>
+    </config>
+
+    <scriptfile>script.php</scriptfile>
+
+    <updateservers>
+        <server type="extension" priority="1" name="Cybersalt Edge Cache Marker">https://www.cybersalt.com/index.php?option=com_csreleasemanager&amp;task=api.updatexml&amp;format=raw&amp;element=csedgecachemarker</server>
+    </updateservers>
+</extension>

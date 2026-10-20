@@ -1,0 +1,24 @@
+# Build artifacts
+dist/*.zip
+*.zip
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Environment
+.env
+.env.local
+
+# Local-only working files (never commit: may hold site credentials)
+.local/
+.playwright-mcp/
+page-after-upload-click.md
