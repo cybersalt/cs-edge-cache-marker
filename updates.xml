@@ -1,24 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  LEGACY update feed. Only 1.0.0 / 1.0.1 installs poll this file (their manifest points at
+  raw.githubusercontent.com/.../main/updates.xml). It offers 1.0.2 once; 1.0.2 and later
+  poll cybersalt.com Release Manager instead:
+  https://www.cybersalt.com/index.php?option=com_csreleasemanager&task=api.updatexml&format=raw&element=csedgecachemarker
+  Keep this file static at 1.0.2.
+-->
 <updates>
     <update>
-        <name>CS Edge Cache Marker</name>
+        <name>Cybersalt Edge Cache Marker</name>
         <description>Sets a marker cookie on editor login so edge caches can bypass authenticated sessions.</description>
         <element>csedgecachemarker</element>
         <type>plugin</type>
         <folder>system</folder>
         <client>0</client>
-        <version>1.0.1</version>
-        <infourl title="CS Edge Cache Marker">https://github.com/cybersalt/cs-edge-cache-marker</infourl>
+        <version>1.0.2</version>
+        <infourl title="Cybersalt Edge Cache Marker">https://docs.cybersalt.com/extensions/edge-cache-marker</infourl>
         <downloads>
-            <downloadurl type="full" format="zip">https://github.com/cybersalt/cs-edge-cache-marker/releases/download/v1.0.1/plg_system_csedgecachemarker_v1.0.1.zip</downloadurl>
+            <downloadurl type="full" format="zip">https://www.cybersalt.com/index.php?option=com_csreleasemanager&amp;task=api.userdownload&amp;format=raw&amp;element=csedgecachemarker&amp;version=1.0.2</downloadurl>
         </downloads>
-        <sha256>22e159e90ff2954f14e3a3b4c51eaab7f340bf4c9d99b54e476447cda9837a4d</sha256>
-        <changelogurl>https://raw.githubusercontent.com/cybersalt/cs-edge-cache-marker/master/CHANGELOG.html</changelogurl>
+        <sha256>72dadb616f8b950cdf4aedf6fa8e54a2f84d5525fa4b0db5977981cfdd32dd3e</sha256>
+        <changelogurl>https://raw.githubusercontent.com/cybersalt/cs-edge-cache-marker/main/CHANGELOG.html</changelogurl>
         <tags>
             <tag>stable</tag>
         </tags>
         <maintainer>Cybersalt</maintainer>
-        <maintainerurl>https://cybersalt.com</maintainerurl>
-        <targetplatform name="joomla" version="5\.[0-9]+|6\.[0-9]+"/>
+        <maintainerurl>https://www.cybersalt.com</maintainerurl>
+        <targetplatform name="joomla" version="(5|6).[0-9]+"/>
     </update>
 </updates>
